@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DigiDetect — a handwritten digit experiment</title>
+<meta name="description" content="A small handwritten-digit recognition experiment built from scratch in JavaScript. Explore the model, train it on MNIST, and learn how neural networks work.">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <a class="brandline" href="#top" aria-label="DigiDetect home"><span class="brand-mark">D</span><span>DIGIDETECT <span class="brand-sub">/ A PERSONAL ML EXPERIMENT</span></span></a>
+    <a class="source-link" href="https://yann.lecun.com/exdb/mnist/" target="_blank" rel="noreferrer">About the MNIST dataset ↗</a>
+  </header>
+
+  <section class="intro" id="top">
+    <p class="eyebrow">A PROJECT IN LEARNING BY BUILDING</p>
+    <h1>Teaching a computer<br><em>to read my handwriting.</em></h1>
+    <p class="intro-copy">I built a small neural network in JavaScript to see what actually happens when a model learns. You can train it, change a few settings, draw a digit, and follow the ideas behind the code.</p>
+    <div class="intro-meta"><span><i></i> Runs in your browser</span><span>No ML framework</span><span>Trained on MNIST</span></div>
+  </section>
+
+  <nav class="tabs" aria-label="Project sections" role="tablist">
+    <button class="tab is-active" id="tab-experiment" type="button" role="tab" aria-selected="true" aria-controls="panel-experiment" data-tab="experiment">01 / EXPERIMENT</button>
+    <button class="tab" id="tab-learning" type="button" role="tab" aria-selected="false" aria-controls="panel-learning" data-tab="learning">02 / HOW IT LEARNS</button>
+  </nav>
+
+  <section class="tab-panel is-active" id="panel-experiment" role="tabpanel" aria-labelledby="tab-experiment">
+    <div class="section-heading"><div><p class="eyebrow">THE INTERACTIVE PART</p><h2>Train a model, then test it.</h2></div><p class="section-note">Change the training data or network size and see what happens. Everything runs locally in this tab.</p></div>
+    <div class="demo" id="app"></div>
+    <p class="below-note">A note on the results: the accuracy shown here is measured on held-out MNIST examples. It is useful for comparing experiments, but it does not mean the model will recognize every style of handwriting.</p>
+  </section>
+
+  <section class="tab-panel" id="panel-learning" role="tabpanel" aria-labelledby="tab-learning" hidden>
+    <div class="section-heading"><div><p class="eyebrow">NOTES FROM BUILDING THIS</p><h2>What is the network actually doing?</h2></div><p class="section-note">This is the mental model that helped me understand the code. The real calculations happen one number at a time.</p></div>
+
+    <article class="lesson-block">
+      <div class="lesson-copy"><p class="eyebrow">01 / THE BIG PICTURE</p><h3>An image goes in. A guess comes out.</h3><p>At the start, the network has no idea what a handwritten 7 looks like. I give it an image and ask it to produce ten scores: one for each possible digit, from 0 through 9. At first those scores are mostly guesses. Training is the process of making those guesses less wrong.</p></div>
+      <div class="flow-diagram" aria-label="Image pixels flow through a hidden layer to ten digit predictions">
+        <div class="flow-stage"><strong>INPUT</strong><div class="pixel-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b>196 pixels</b><small>14 × 14 image</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-stage"><strong>HIDDEN LAYER</strong><div class="neuron-stack" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><b>64 neurons</b><small>ReLU activation</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-stage"><strong>OUTPUT</strong><div class="output-digits" aria-hidden="true"><i>0</i><i>1</i><i>2</i><i>…</i><i>9</i></div><b>10 scores</b><small>One per digit</small></div>
+      </div>
+    </article>
+
+    <article class="lesson-block">
+      <div class="lesson-copy"><p class="eyebrow">02 / THE LAYERS</p><h3>Why have a hidden layer?</h3><p>The input layer is just the pixel values. The output layer represents the ten possible answers. The hidden layer sits in between and gives the network room to combine pixels into more useful patterns — for example, edges, curves, loops, and the way strokes meet.</p><p>Each neuron receives numbers from the previous layer, multiplies them by weights, adds a bias, and applies an activation function. It is not assigned a human-readable feature; those useful patterns emerge as the weights change during training.</p></div>
+      <div class="definition-list">
+        <div><b>Input layer</b><span>The 196 brightness values from the image.</span></div>
+        <div><b>Hidden layer</b><span>The 64 intermediate calculations that combine those values.</span></div>
+        <div><b>Output layer</b><span>Ten scores that become probabilities for digits 0–9.</span></div>
+        <div><b>ReLU</b><span>Turns negative values into zero and keeps positive values.</span></div>
+        <div><b>Softmax</b><span>Turns the ten output scores into values that add up to 1.</span></div>
+      </div>
+    </article>
+
+    <article class="lesson-block">
+      <div class="lesson-copy"><p class="eyebrow">03 / PARAMETERS</p><h3>The numbers the network learns.</h3><p>Most of what the model learns is stored in its weights and biases. They start with small random values. During training, the network keeps nudging them so that the correct digit gets a higher score next time.</p></div>
+      <div class="parameter-table" role="table" aria-label="Neural network parameters">
+        <div class="param-row param-head" role="row"><b role="columnheader">Parameter</b><b role="columnheader">What it means here</b></div>
+        <div class="param-row" role="row"><b>Weights</b><span>How strongly one neuron influences the next. These are the main learned values.</span></div>
+        <div class="param-row" role="row"><b>Biases</b><span>An extra value added to a neuron's weighted input, shifting when it activates.</span></div>
+        <div class="param-row" role="row"><b>Learning rate</b><span>How large each update is. Too high can make learning unstable; too low can make it slow.</span></div>
+        <div class="param-row" role="row"><b>Batch size</b><span>How many examples are used to calculate one update. This project uses 32.</span></div>
+        <div class="param-row" role="row"><b>Epoch</b><span>One pass through the full training set.</span></div>
+      </div>
+    </article>
+
+    <article class="lesson-block lesson-process">
+      <div class="lesson-copy"><p class="eyebrow">04 / THE TRAINING LOOP</p><h3>How a wrong answer turns into an update.</h3><p>This is the loop I wanted to understand rather than treat as a black box. The model makes a prediction, measures how far it was from the label, and uses that error to work out which weights should change.</p></div>
+      <ol class="steps-list">
+        <li><b>Forward pass</b><span>Pixels move through the network. The output layer produces ten probabilities.</span></li>
+        <li><b>Calculate the loss</b><span>The correct label is compared with the prediction. A confident wrong answer gets a larger penalty.</span></li>
+        <li><b>Backpropagation</b><span>The error is traced backwards to calculate how much each weight and bias contributed.</span></li>
+        <li><b>Update the parameters</b><span>Gradient descent adjusts the weights. Momentum helps updates keep moving in a consistent direction.</span></li>
+        <li><b>Repeat</b><span>The network sees more batches, then another epoch. I check accuracy on examples it did not train on.</span></li>
+      </ol>
+    </article>
+
+    <div class="glossary-note"><b>One distinction worth remembering</b><p>Training accuracy and test accuracy are not the same thing. A model can get very good at examples it has already seen without being equally good at new ones. That is why DigiDetect keeps a separate test set and reports its accuracy.</p></div>
+
+    <div class="questions-block"><div><p class="eyebrow">05 / THINGS TO TRY NEXT</p><h3>Questions I would investigate.</h3></div><ul><li>Does doubling the number of hidden neurons actually improve test accuracy?</li><li>What changes when I train on 5,000 examples instead of all 60,000?</li><li>Can I make the model overfit by training for too many epochs?</li><li>Why does my own handwriting sometimes look different from MNIST examples?</li><li>What would a convolutional neural network do differently?</li></ul></div>
+  </section>
+
+  <footer><span>DIGIDETECT · BUILT TO UNDERSTAND THE BASICS</span><span>MNIST · JAVASCRIPT · NO ML FRAMEWORK</span></footer>
+</main>
+<script src="js/core.js"></script>
+<script src="js/nn.js"></script>
+<script src="data/digits.js"></script>
+<script src="js/digidetect.js"></script>
+<script>
+  const app = Site.getDemo("digidetect")(document.getElementById("app"));
+  app.start();
+  document.addEventListener("visibilitychange", () => document.hidden ? app.stop() : app.start());
+  const tabs = [...document.querySelectorAll("[data-tab]")];
+  tabs.forEach((tab) => tab.addEventListener("click", () => {
+    const name = tab.dataset.tab;
+    tabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+    document.querySelectorAll(".tab-panel").forEach((panel) => {
+      const active = panel.id === `panel-${name}`;
+      panel.hidden = !active;
+      panel.classList.toggle("is-active", active);
+    });
+  }));
+</script>
+</body>
+</html>

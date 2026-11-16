@@ -1,0 +1,10 @@
+{
+  "name": "digidetect",
+  "version": "1.0.0",
+  "description": "An interactive handwritten digit recognition experiment with a neural network implemented from scratch.",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "start": "python3 -m http.server 8000"
+  }
+}

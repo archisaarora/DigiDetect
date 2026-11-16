@@ -1,0 +1,73 @@
+# DigiDetect
+
+### Learning how neural networks work by building one.
+
+I wanted to understand what actually happens behind a neural network instead of just using an existing machine learning library and getting a prediction back.
+
+So I built DigiDetect: a small handwritten digit recognition experiment that trains a neural network to recognize numbers from 0–9.
+
+The idea was to build the model myself, experiment with its parameters, and get a better understanding of how training works from beginning to end.
+
+## What I explored
+
+- **Building a neural network from scratch:** Implemented a multilayer perceptron in JavaScript, including forward propagation, backpropagation, and gradient descent.
+- **Understanding hidden layers:** Experimented with different hidden-layer sizes (32, 64, and 128 neurons) and explored how neurons combine input pixels into intermediate representations.
+- **Training on MNIST:** Used the MNIST handwritten digit dataset, which contains 60,000 training images and 10,000 test images.
+- **Evaluating performance:** Tracked training loss and test accuracy to see how the model changes as it learns.
+- **Testing predictions:** Built a drawing interface where I can write my own digits and see what the model predicts.
+
+## A little about how it works
+
+Each image is represented as a 14 × 14 grid of pixel values, giving the network 196 inputs.
+
+Those values pass through a hidden layer using ReLU activation. The output layer has 10 neurons, one for each possible digit, and uses softmax to produce prediction probabilities.
+
+The model learns by comparing its predictions with the correct labels, calculating the error, and updating its weights and biases through backpropagation and mini-batch gradient descent.
+
+I also added a separate section to the website explaining these concepts because I wanted to be able to follow what the code was actually doing, rather than treating the training process as a black box.
+
+## Tech stack
+
+- JavaScript
+- HTML / CSS
+- MNIST dataset
+- Node.js (for running tests)
+
+No TensorFlow, PyTorch, or external machine learning framework is used for the neural network itself.
+
+## Running it locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/DigiDetect.git
+cd DigiDetect
+```
+
+Start a local server:
+
+```bash
+python3 -m http.server 8000
+```
+
+Open `http://localhost:8000` in your browser.
+
+The bundled sample dataset works offline. Loading the full MNIST dataset requires an internet connection.
+
+## Running the tests
+
+```bash
+npm test
+```
+
+The tests cover dataset decoding, prediction probabilities, gradient calculations, loss reduction, and model accuracy.
+
+## Things I want to experiment with next
+
+- How does increasing the number of hidden neurons affect accuracy?
+- Does training on more data always improve the model?
+- What happens when the model starts overfitting?
+- How does a convolutional neural network compare to this basic fully connected network?
+- Why does the model sometimes struggle with digits drawn by hand, even when it performs well on MNIST?
+
+This project is an ongoing learning experiment. I built it to get more comfortable with the fundamentals of machine learning and to understand the math and implementation behind a model rather than relying entirely on prebuilt tools.
